@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00f1f2f5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#848484</color>
+    <color name="window">#9b9b9b</color>
+    <color name="firstTile">#50E3C2</color>
+    <color name="secondTile">#B8E986</color>
+    <color name="thirdTile">#F1E550</color>
+    <color name="fourthTile">#F5A623</color>
+    <color name="fifthTile">#80B0DE</color>
+    <color name="completedTask">#D8D8D8</color>
+</resources>
