@@ -2,6 +2,8 @@ package com.vikash.todotask;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +36,7 @@ public class SecondFragment extends Fragment {
     SubTaskAdapter subTaskAdapter;
     static int index;
     View view;
+    Task task;
 
 
     public SecondFragment() {
@@ -60,42 +63,21 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view1, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view=view1;
-        refreshFragment();
-        Task task=MainFragment.taskList.get(index);
-
-        ToggleButton toggleButton=view.findViewById(R.id.completed1);
-        toggleButton.setText(null);
-        toggleButton.setTextOn(null);
-        toggleButton.setTextOff(null);
-
-        TextView title=view.findViewById(R.id.titletextView);
-        title.setText(task.getTitle());
-
-        TextView completionRate=view.findViewById(R.id.completionview);
-        completionRate.setText(task.getCompletionRate()+"%");
-
-        CardView cardView=view.findViewById(R.id.cardView3);
-        cardView.setCardBackgroundColor(ColorGenerator.colorForPosition(index,getActivity()));
-        RelativeLayout layout=view.findViewById(R.id.relativeLayout3);
-        int color=ColorGenerator.colorFader(ColorGenerator.colorForPosition(index,getActivity()));
-        layout.setBackgroundColor(color);
-
-
-
-        recyclerView=(RecyclerView)view.findViewById(R.id.recycler2);
-        recyclerView.setBackgroundColor(color);
-
-        subTasks=task.subTasks;
         if(subTasks==null)
             subTasks=new ArrayList<Task.SubTask>();
 
-        subTasks.add(new Task.SubTask("8 June, 2018","5 July, 2018","Take out the Garbage",false));
-        subTasks.add(new Task.SubTask("9 June, 2018","7 July, 2018","Clean the Kitchen floor",false));
 
+        recyclerView=(RecyclerView)view.findViewById(R.id.recycler2);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        subTaskAdapter=new SubTaskAdapter(subTasks,getContext());
         recyclerView.setHasFixedSize(true);
+
+        subTaskAdapter=new SubTaskAdapter(subTasks,getActivity());
         recyclerView.setAdapter(subTaskAdapter);
+
+        if(MainFragment.taskList.size()!=0)
+            refreshFragment();
+
+
 
         ImageButton button=view.findViewById(R.id.imageButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -128,8 +110,18 @@ public class SecondFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         //save the title here.
                         String start="Start : ",end="End : ";
-                        subTasks.add(new Task.SubTask(start+"today",end+editText1.getText(),editText.getText().toString(),false));
-                        subTaskAdapter.notifyDataSetChanged();
+                        try {
+                            SQLiteStatement statement = MainActivity.database.compileStatement("INSERT INTO subtasklist(tasktitle,description,startdate,enddate,completed) VALUES(?,?,?,?,?)");
+                            statement.bindString(1, task.title);
+                            statement.bindString(2, editText.getText().toString());
+                            statement.bindString(3, start + "today");
+                            statement.bindString(4, end + editText1.getText().toString());
+                            statement.bindLong(5,0);
+                            statement.execute();
+                        }   catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        refreshFragment();
 
                     }})
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -143,14 +135,33 @@ public class SecondFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshFragment();
-    }
+
+
 
     public void refreshFragment(){
-        Task task=MainFragment.taskList.get(index);
+        boolean temp;
+        task=MainFragment.taskList.get(index);
+        if(task.subTasks==null)
+            task.subTasks=new ArrayList<Task.SubTask>();
+        task.subTasks.clear();
+
+        Cursor c=MainActivity.database.rawQuery("SELECT * FROM subtasklist WHERE tasktitle='"+task.getTitle()+"'",null);
+        if(c.moveToNext()){
+            if(c.getLong(c.getColumnIndex("completed"))==0)
+                temp=false;
+            else
+                temp=true;
+            do {
+                task.subTasks.add(new Task.SubTask(c.getString(c.getColumnIndex("startdate")),c.getString(c.getColumnIndex("enddate")),c.getString(c.getColumnIndex("description")),temp));
+            }   while(c.moveToNext());
+        }
+
+
+        subTasks.clear();
+        for(Task.SubTask sub: task.subTasks){
+            subTasks.add(sub);
+        }
+        subTaskAdapter.notifyDataSetChanged();
 
         ToggleButton toggleButton=view.findViewById(R.id.completed1);
         toggleButton.setText(null);
@@ -169,9 +180,6 @@ public class SecondFragment extends Fragment {
         int color=ColorGenerator.colorFader(ColorGenerator.colorForPosition(index,getActivity()));
         layout.setBackgroundColor(color);
 
-
-
-        recyclerView=(RecyclerView)view.findViewById(R.id.recycler2);
         recyclerView.setBackgroundColor(color);
         LinearLayout layout1=view.findViewById(R.id.backLayout);
         layout1.setBackgroundColor(color);

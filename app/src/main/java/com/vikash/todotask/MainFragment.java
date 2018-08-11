@@ -2,6 +2,8 @@ package com.vikash.todotask;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -61,15 +63,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        taskList=new ArrayList<Task>();
-
-        taskList.add(new Task("Homeworks",false,22));
-        taskList.add(new Task("Groceries",false,32));
-        taskList.add(new Task("Girlfriend Birthday",false,50));
-        taskList.add(new Task("Party Planning",false,40));
-        taskList.add(new Task("Puja Decoration",false,45));
-
-
         recyclerView=(RecyclerView) view.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -88,7 +81,6 @@ public class MainFragment extends Fragment {
                 MainActivity.switchFragment(view,position);
                 Log.i("recycler","OnClickListener is being called");
 
-
             }
 
             @Override
@@ -98,6 +90,26 @@ public class MainFragment extends Fragment {
         }));
 
 
+    }
+
+    public static void getTaskList(ArrayList<Task> taskList) {
+        Cursor c=MainActivity.database.rawQuery("SELECT * FROM tasklist WHERE completed=0",null);
+        int taskIndex=c.getColumnIndex("title");
+        if(c.moveToNext()){
+            taskList.clear();
+            int rate;
+            do{
+                Cursor total=MainActivity.database.rawQuery("SELECT * FROM subtasklist WHERE tasktitle="+"'"+c.getString(taskIndex)+"'",null);
+                Cursor foundComplete=MainActivity.database.rawQuery("SELECT * FROM subtasklist WHERE tasktitle="+"'"+c.getString(taskIndex)+"' AND completed=0",null);
+
+                if(total.moveToNext())
+                    rate=(foundComplete.getCount()*100)/total.getCount();
+                else rate=0;
+
+                taskList.add(new Task(c.getString(taskIndex),false,0));
+
+            }   while(c.moveToNext());
+        }
     }
 
     public void addTask(View view){
@@ -120,6 +132,16 @@ public class MainFragment extends Fragment {
                         taskList.add(new Task(editText.getText().toString(),false,0));
                         taskAdapter.notifyDataSetChanged();
                         Log.i("task",taskList.get(0).title);
+
+                        try{
+                            SQLiteStatement statement=MainActivity.database.compileStatement("INSERT INTO tasklist (TITLE,COMPLETED) VALUES(?,0)");
+                            statement.bindString(1,editText.getText().toString());
+                            statement.execute();
+                        }   catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+
 
                     }})
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
