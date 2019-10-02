@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/editItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
+        android:paddingStart="20dp"
+        android:text="Edit"
+        android:textAlignment="viewStart"
+        android:textSize="18sp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/setComplete"
+        android:background="@color/cardview_light_background"
+        android:paddingStart="20dp"
+        android:text="Set Complete"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/deleteItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
+        android:paddingStart="20dp"
+        android:text="Delete"
+        android:textAlignment="viewStart"
+        android:textSize="18sp" />
+
+</LinearLayout>

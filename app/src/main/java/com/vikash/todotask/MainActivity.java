@@ -1,8 +1,10 @@
 package com.vikash.todotask;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -35,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database=this.openOrCreateDatabase("Tasks",MODE_PRIVATE,null);
-        database.execSQL("CREATE TABLE IF NOT EXISTS tasklist(title VARCHAR PRIMARY KEY,completed  int)");
-        database.execSQL("CREATE TABLE IF NOT EXISTS subtasklist(tasktitle VARCHAR,description TEXT,startdate VARCHAR,enddate VARCHAR,completed int)");
+        database.execSQL("CREATE TABLE IF NOT EXISTS tasklist(title VARCHAR PRIMARY KEY,completed  INTEGER)");
+        database.execSQL("CREATE TABLE IF NOT EXISTS subtasklist(tasktitle VARCHAR,description TEXT,startdate VARCHAR,enddate VARCHAR,completed INTEGER)");
 
         fragment=new MainFragment();
-        MainFragment.getTaskList(MainFragment.taskList=new ArrayList<>());
+        MainFragment.getTaskList(MainFragment.taskList=new ArrayList<>(),false);
+        MainFragment.getTaskList(MainFragment.completedTaskList=new ArrayList<>(),true);
 
 
         if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
@@ -58,8 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void switchFragment(View view, int index){
+    public static void switchFragment(View view, int index,boolean completed){
         SecondFragment.index=index;
+        SecondFragment.completed=completed;
         secondFragment.refreshFragment();
         viewPager.setCurrentItem(1);
     }

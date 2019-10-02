@@ -7,11 +7,13 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -46,9 +48,12 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
             holder.completed.setText(null);
             holder.completed.setTextOn(null);
             holder.completed.setTextOff(null);
+            holder.completed.setChecked(task.isCompleted());
 
-            holder.cardView.setCardBackgroundColor(ColorGenerator.colorForPosition(position,context));
-
+            if(holder.completed.isChecked())
+                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.grey));
+            else
+                holder.cardView.setCardBackgroundColor(ColorGenerator.colorForPosition(position,context));
     }
 
     @Override
@@ -70,6 +75,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
             title=itemView.findViewById(R.id.textView);
             completionRate=itemView.findViewById(R.id.textView2);
             cardView=(CardView)itemView.findViewById(R.id.cardView);
+
 
         }
 

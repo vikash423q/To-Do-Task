@@ -21,13 +21,32 @@
     </EditText>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="89dp"
+        android:layout_height="38dp"
+        android:gravity="left|center"
         android:text="End Date"
         android:textSize="18sp" />
-    <EditText
-        android:id="@+id/editText3"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="normal"/>
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="34dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Pick Date" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="189dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center"
+            android:paddingStart="20dp"
+            android:textSize="18sp" />
+    </LinearLayout>
+
 </LinearLayout>

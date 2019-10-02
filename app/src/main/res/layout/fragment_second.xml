@@ -107,19 +107,21 @@
 
                 <TextView
                     android:id="@+id/titletextView"
-                    android:layout_width="259dp"
+                    android:layout_width="252dp"
                     android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/completionview"
+                    android:layout_marginStart="49dp"
                     android:elevation="5dp"
                     android:gravity="left|center"
                     android:text="Homeworks"
+                    android:textAlignment="textStart"
                     android:textColor="@android:color/black"
                     android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/completionview"
-                    android:layout_width="52dp"
+                    android:layout_width="65dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
@@ -159,6 +161,7 @@
             android:layout_width="126dp"
             android:layout_height="match_parent"
             android:layout_toStartOf="@+id/imageButton"
+            android:gravity="center"
             android:text="Add Subtask"
             android:textSize="20sp" />
     </RelativeLayout>

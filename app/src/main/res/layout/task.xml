@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="259dp"
+                android:layout_width="249dp"
                 android:layout_height="55dp"
                 android:layout_alignParentTop="true"
                 android:layout_toStartOf="@+id/textView2"
@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="52dp"
+                android:layout_width="65dp"
                 android:layout_height="55dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
